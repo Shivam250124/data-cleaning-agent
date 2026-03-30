@@ -1,0 +1,81 @@
+name: data-cleaning-agent
+version: "1.0.0"
+description: >
+  A multi-step data cleaning environment where AI agents must identify and fix
+  data quality issues in synthetic CSV datasets. Tasks range from easy (50-row
+  customer data) to hard (500-row HR data) with a dense shaped reward function.
+tags:
+  - openenv
+  - data-cleaning
+  - business
+  - productivity
+author: shivam250124
+license: MIT
+
+tasks:
+  - id: easy
+    name: Customer Data Cleaning
+    description: Clean a 50-row customer dataset with missing values, duplicates, type errors, and formatting issues.
+    difficulty: easy
+    max_steps: 15
+    expected_score: 0.78
+
+  - id: medium
+    name: Sales Data Cleaning
+    description: Clean a 200-row sales dataset with multiple data quality issues across 8 columns.
+    difficulty: medium
+    max_steps: 30
+    expected_score: 0.55
+
+  - id: hard
+    name: HR Data Cleaning
+    description: Clean a 500-row HR dataset with complex data quality issues requiring multi-step reasoning.
+    difficulty: hard
+    max_steps: 60
+    expected_score: 0.30
+
+observation_space:
+  type: object
+  fields:
+    state:
+      type: array
+      description: Current dataset as list of row objects
+    reward:
+      type: float
+      range: [0.0, 1.0]
+      description: Shaped reward signal after each step
+    done:
+      type: boolean
+      description: Whether the episode has ended
+    info:
+      type: object
+      fields:
+        step: integer
+        max_steps: integer
+        difficulty: string
+        final_score: float (present when done=true)
+
+action_space:
+  type: object
+  fields:
+    action_type:
+      type: string
+      enum:
+        - drop_duplicates
+        - fill_missing
+        - cast_column
+        - rename_column
+        - strip_whitespace
+        - drop_column
+    params:
+      type: object
+      description: Action-specific parameters
+
+endpoints:
+  reset: POST /reset
+  step: POST /step
+  state: GET /state
+  health: GET /health
+  tasks: GET /tasks
+  grader: GET /grader
+  baseline: POST /baseline
