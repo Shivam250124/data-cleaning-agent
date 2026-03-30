@@ -1,0 +1,46 @@
+customer_id,name,email,age,phone,city,signup_date
+1001,Alice Smith,alice.smith1001@gmail.com,22,555-795-6890,New York,2020-06-25
+1002,Bob Johnson,bob.johnson1002@yahoo.com,22,555-726-2813,Los Angeles,2018-07-28
+1003,Carol Williams,carol.williams1003@outlook.com,56,555-784-7456,Chicago,2022-07-04
+1004,David Brown,david.brown1004@hotmail.com,61,555-504-5502,Houston,2020-03-26
+1005,Eve Jones,eve.jones1005@example.com,58,555-678-4621,Phoenix,2022-07-13
+1006,Frank Garcia,frank.garcia1006@gmail.com,41,555-304-1829,Philadelphia,2021-11-02
+1007,Grace Miller,grace.miller1007@yahoo.com,62,555-844-3490,San Antonio,2021-02-22
+1008,Hank Davis,hank.davis1008@outlook.com,54,555-418-1611,San Diego,2023-06-26
+1009,Iris Wilson,iris.wilson1009@hotmail.com,53,555-799-7838,Dallas,2019-05-14
+1010,Jack Moore,jack.moore1010@example.com,43,555-139-5918,San Jose,2018-09-20
+1011,Karen Taylor,karen.taylor1011@gmail.com,65,555-769-4299,New York,2023-05-10
+1012,Leo Anderson,leo.anderson1012@yahoo.com,65,555-433-1687,Los Angeles,2020-10-06
+1013,Mia Thomas,mia.thomas1013@outlook.com,42,555-216-7177,Chicago,2020-04-07
+1014,Nate Jackson,nate.jackson1014@hotmail.com,47,555-702-9461,Houston,2020-02-24
+1015,Olivia White,olivia.white1015@example.com,50,555-729-1874,Phoenix,2019-10-24
+1016,Paul Harris,paul.harris1016@gmail.com,40,555-823-8574,Philadelphia,2020-11-09
+1017,Quinn Martin,quinn.martin1017@yahoo.com,30,555-713-6730,San Antonio,2018-10-06
+1018,Rachel Thompson,rachel.thompson1018@outlook.com,59,555-106-8170,San Diego,2022-10-19
+1019,Sam Young,sam.young1019@hotmail.com,42,555-733-3493,Dallas,2022-07-13
+1020,Tina Allen,tina.allen1020@example.com,44,555-611-1335,San Jose,2018-03-04
+1021,Uma Smith,uma.smith1021@gmail.com,40,555-700-6889,New York,2020-11-16
+1022,Victor Johnson,victor.johnson1022@yahoo.com,22,555-787-6170,Los Angeles,2021-07-16
+1023,Wendy Williams,wendy.williams1023@outlook.com,22,555-602-8153,Chicago,2019-08-01
+1024,Xander Brown,xander.brown1024@hotmail.com,36,555-492-9843,Houston,2019-04-12
+1025,Yara Jones,yara.jones1025@example.com,69,555-867-1312,Phoenix,2019-10-02
+1026,Zoe Garcia,zoe.garcia1026@gmail.com,62,555-352-9257,Philadelphia,2019-06-19
+1027,Aaron Miller,aaron.miller1027@yahoo.com,24,555-600-5544,San Antonio,2022-12-19
+1028,Beth Davis,beth.davis1028@outlook.com,39,555-465-4761,San Diego,2022-04-05
+1029,Carl Wilson,carl.wilson1029@hotmail.com,35,555-120-1955,Dallas,2018-10-21
+1030,Diana Moore,diana.moore1030@example.com,54,555-515-7452,San Jose,2018-11-15
+1031,Ethan Taylor,ethan.taylor1031@gmail.com,66,555-236-5475,New York,2022-06-13
+1032,Fiona Anderson,fiona.anderson1032@yahoo.com,26,555-442-3148,Los Angeles,2019-09-18
+1033,George Thomas,george.thomas1033@outlook.com,49,555-425-9636,Chicago,2018-05-04
+1034,Hannah Jackson,hannah.jackson1034@hotmail.com,35,555-964-4296,Houston,2023-06-20
+1035,Ivan White,ivan.white1035@example.com,41,555-339-7877,Phoenix,2023-04-22
+1036,Julia Harris,julia.harris1036@gmail.com,31,555-744-8100,Philadelphia,2020-09-08
+1037,Kevin Martin,kevin.martin1037@yahoo.com,22,555-186-5022,San Antonio,2023-02-13
+1038,Laura Thompson,laura.thompson1038@outlook.com,54,555-281-7493,San Diego,2019-10-17
+1039,Mike Young,mike.young1039@hotmail.com,46,555-258-5168,Dallas,2023-01-22
+1040,Nancy Allen,nancy.allen1040@example.com,43,555-746-6969,San Jose,2020-04-18
+1041,Oscar Smith,oscar.smith1041@gmail.com,25,555-625-1852,New York,2021-08-03
+1042,Pam Johnson,pam.johnson1042@yahoo.com,57,555-473-8081,Los Angeles,2018-03-14
+1043,Roy Williams,roy.williams1043@outlook.com,27,555-396-6944,Chicago,2018-09-03
+1044,Sara Brown,sara.brown1044@hotmail.com,27,555-628-8140,Houston,2019-04-26
+1045,Tom Jones,tom.jones1045@example.com,69,555-622-5022,Phoenix,2020-08-17
