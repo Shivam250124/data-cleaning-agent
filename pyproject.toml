@@ -42,6 +42,7 @@ dev = [
 ]
 
 [project.scripts]
+server = "server.app:main"
 serve = "server.app:main"
 
 [project.entry-points."openenv.server"]
