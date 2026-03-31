@@ -64,6 +64,27 @@ def get_env() -> DataCleaningEnv:
     return _env
 
 
+@app.get("/")
+async def root():
+    """Root endpoint with API information."""
+    return {
+        "name": "Data Cleaning Agent OpenEnv",
+        "version": "1.0.0",
+        "description": "OpenEnv environment for evaluating AI agents on data cleaning tasks",
+        "endpoints": {
+            "health": "GET /health",
+            "tasks": "GET /tasks",
+            "reset": "POST /reset",
+            "step": "POST /step",
+            "state": "GET /state",
+            "grader": "GET /grader",
+            "baseline": "POST /baseline",
+            "docs": "GET /docs",
+        },
+        "status": "running"
+    }
+
+
 @app.get("/health", response_model=HealthResponse)
 async def health_check() -> HealthResponse:
     """Health check endpoint for deployment verification."""
