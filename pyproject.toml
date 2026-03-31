@@ -42,10 +42,10 @@ dev = [
 ]
 
 [project.scripts]
-serve = "uvicorn:main"
+serve = "server.app:main"
 
 [project.entry-points."openenv.server"]
-app = "server.app:app"
+app = "server.app:main"
 
 [project.urls]
 "Homepage" = "https://huggingface.co/spaces/shivam250124/data-cleaning-agent"
