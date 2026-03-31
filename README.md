@@ -19,9 +19,9 @@ The agent receives a dirty DataFrame and must apply cleaning actions to match a 
 
 | Task | Dataset | Rows | Max Steps | Expected Score |
 |------|---------|------|-----------|----------------|
-| Easy | Customer data | 50 | 15 | ~0.78 |
-| Medium | Sales data | 200 | 30 | ~0.55 |
-| Hard | HR data | 500 | 60 | ~0.30 |
+| Easy | Customer data | 50 | 15 | ~0.85 |
+| Medium | Sales data | 200 | 30 | ~0.75 |
+| Hard | HR data | 500 | 60 | ~0.60 |
 
 Each dirty dataset contains: missing values, duplicate rows, type errors, and formatting inconsistencies.
 
@@ -61,11 +61,17 @@ Each dirty dataset contains: missing values, duplicate rows, type errors, and fo
 
 ## Reward Function
 
-Dense shaped reward based on 4 sub-scores:
-- **duplicate_score** (10%): fraction of duplicates removed
-- **missing_score** (10%): fraction of missing values filled
-- **type_score** (10%): fraction of columns with correct dtypes
-- **value_score** (70%): cell-level exact match against clean dataset
+Dense shaped reward based on score improvement (can be negative for regression):
+
+**Grader Score** (0.0 to 1.0) computed from 3 sub-scores:
+- **row_score** (20%): Penalizes wrong row count (duplicates not removed)
+- **null_score** (20%): Penalizes missing values not filled
+- **cell_score** (60%): Cell-level exact match against clean dataset
+
+**Step Reward** = `curr_score - prev_score` (range: -1.0 to 1.0)
+- Positive when cleaning improves the data
+- Negative when an action makes things worse
+- Completion bonus (+0.1 × efficiency) for finishing with score ≥ 0.95
 
 ## API Endpoints
 
@@ -88,13 +94,23 @@ uvicorn app.main:app --host 0.0.0.0 --port 7860
 
 ## Baseline
 
+The baseline uses the OpenAI-compatible API (works with Groq, OpenAI, or any compatible provider):
+
 ```bash
-export OPENAI_API_KEY="your-groq-or-openai-key"
-export OPENAI_BASE_URL="https://api.groq.com/openai/v1"  # optional, defaults to Groq
+export OPENAI_API_KEY="your-api-key"
+export OPENAI_BASE_URL="https://api.groq.com/openai/v1"  # Groq (free), or omit for OpenAI
+export BASELINE_MODEL="llama-3.1-8b-instant"  # optional, defaults to llama-3.1-8b-instant
 python scripts/baseline.py
 ```
 
-Baseline scores: Easy ~0.94, Medium ~0.98, Hard ~0.99
+**Expected baseline scores** (LLM-guided cleaning):
+| Task | Expected Score |
+|------|----------------|
+| Easy | ~0.85 - 0.95 |
+| Medium | ~0.70 - 0.85 |
+| Hard | ~0.50 - 0.70 |
+
+Note: Scores depend on the model used and may vary.
 
 ## Docker
 
