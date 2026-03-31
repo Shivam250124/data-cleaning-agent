@@ -77,7 +77,15 @@ def run_episode(env: DataCleaningEnv, client: OpenAI, difficulty: DifficultyLeve
 Current data (first 10 rows): {json.dumps(preview, default=str)}
 Step: {step + 1}/{obs.info.max_steps}
 
-Available actions: drop_duplicates, fill_missing, cast_column, rename_column, strip_whitespace, drop_column
+IMPORTANT - Use EXACTLY these parameter names:
+- drop_duplicates: {{}}
+- fill_missing: {{"column": "col_name", "strategy": "mean"}} or {{"column": "col_name", "value": "x"}}
+- cast_column: {{"column": "col_name", "dtype": "int"}}
+- rename_column: {{"old_name": "old", "new_name": "new"}}
+- strip_whitespace: {{"column": "col_name"}}
+- drop_column: {{"column": "col_name"}}
+
+The key is always "column" (not "column_name", not "col").
 
 Respond with JSON only: {{"action_type": "...", "params": {{...}}}}"""
 
