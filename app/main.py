@@ -94,12 +94,12 @@ async def health_check() -> HealthResponse:
 
 
 @app.post("/reset", response_model=ObservationResponse)
-async def reset(request: ResetRequest) -> ObservationResponse:
+async def reset(request: ResetRequest = ResetRequest()) -> ObservationResponse:
     """
     Reset the environment for a new episode.
 
     Args:
-        request: Contains the difficulty level.
+        request: Contains the difficulty level (defaults to 'easy' if not provided).
 
     Returns:
         Initial observation with state, reward, done flag, and info.

@@ -22,7 +22,7 @@ class ActionType(str, Enum):
 
 
 class ResetRequest(BaseModel):
-    difficulty: DifficultyLevel
+    difficulty: DifficultyLevel = DifficultyLevel.easy  # Default to easy
 
 
 class ActionRequest(BaseModel):
