@@ -195,76 +195,41 @@ class BaselineRequest(BaseModel):
 
 @app.post("/baseline")
 async def run_baseline(request: BaselineRequest = BaselineRequest()):
-    """Trigger baseline inference and return scores for all tasks."""
-    api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-    if not api_key:
-        raise HTTPException(
-            status_code=400,
-            detail="No API key set. Set OPENAI_API_KEY or GOOGLE_API_KEY environment variable.",
-        )
+    """Return baseline scores for all tasks (quick version using grader only)."""
+    env = get_env()
+    scores = {}
 
-    try:
-        from openai import OpenAI
+    for diff_str in request.difficulties:
+        try:
+            difficulty = DifficultyLevel(diff_str)
+        except ValueError:
+            continue
 
-        base_url = os.environ.get("OPENAI_BASE_URL", "https://api.groq.com/openai/v1")
-        model = os.environ.get("BASELINE_MODEL", "llama-3.1-8b-instant")
+        # Reset and apply best known cleaning sequence deterministically
+        obs = env.reset(difficulty)
 
-        client = OpenAI(api_key=api_key, base_url=base_url)
-        env = get_env()
-        scores = {}
+        # Apply a fixed sequence of cleaning actions (deterministic baseline)
+        actions = [
+            (ActionType.drop_duplicates, {}),
+            (ActionType.strip_whitespace, {"column": list(obs.state[0].keys())[1]}),
+            (ActionType.fill_missing, {"column": list(obs.state[0].keys())[1], "strategy": "mode"}),
+        ]
 
-        for diff_str in request.difficulties:
+        for action_type, params in actions:
+            if obs.done:
+                break
             try:
-                difficulty = DifficultyLevel(diff_str)
-            except ValueError:
-                continue
+                obs = env.step(action_type, params)
+            except Exception:
+                pass
 
-            obs = env.reset(difficulty)
-            max_steps = obs.info.max_steps
+        scores[diff_str] = env.get_current_score()
 
-            for _ in range(max_steps):
-                if obs.done:
-                    break
-
-                state_preview = obs.state[:10]
-                prompt = f"""You are a data cleaning agent. Clean this dataset by choosing one action.
-
-Current data (first 10 rows): {state_preview}
-Step: {obs.info.step}/{max_steps}
-
-Available actions: drop_duplicates, fill_missing, cast_column, rename_column, strip_whitespace, drop_column
-
-Respond with JSON only: {{"action_type": "...", "params": {{...}}}}"""
-
-                try:
-                    response = client.chat.completions.create(
-                        model=model,
-                        messages=[{"role": "user", "content": prompt}],
-                        temperature=0,
-                        max_tokens=200,
-                    )
-                    import json, re
-                    text = response.choices[0].message.content.strip()
-                    if "```" in text:
-                        text = re.sub(r"```[a-z]*", "", text).replace("```", "").strip()
-                    data = json.loads(text)
-                    action_req = ActionRequest(
-                        action_type=ActionType(data["action_type"]),
-                        params=data.get("params", {}),
-                    )
-                    obs = env.step(action_req.action_type, action_req.params)
-                except Exception:
-                    obs = env.step(ActionType.drop_duplicates, {})
-
-            scores[diff_str] = env.get_current_score()
-
-        return {
-            "scores": scores,
-            "all_in_range": all(0.0 <= s <= 1.0 for s in scores.values()),
-        }
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Baseline failed: {str(e)}")
+    return {
+        "scores": scores,
+        "all_in_range": all(0.0 <= s <= 1.0 for s in scores.values()),
+        "note": "Deterministic baseline. For LLM baseline run: python scripts/baseline.py",
+    }
 
 
 # Exception handlers for better error responses
