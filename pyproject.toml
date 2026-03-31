@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "data-cleaning-agent"
+version = "1.0.0"
+description = "OpenEnv environment for evaluating AI agents on data cleaning tasks"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "shivam250124"}
+]
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+keywords = ["openenv", "data-cleaning", "reinforcement-learning", "ai-agents"]
+dependencies = [
+    "fastapi>=0.111.0",
+    "uvicorn>=0.29.0",
+    "pandas>=2.2.2",
+    "pydantic>=2.0.0",
+    "openai>=1.30.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2.0",
+    "pytest-asyncio>=0.23.6",
+    "hypothesis>=6.100.1",
+    "httpx>=0.27.0",
+]
+
+[project.urls]
+"Homepage" = "https://huggingface.co/spaces/shivam250124/data-cleaning-agent"
+"Repository" = "https://github.com/Shivam250124/data-cleaning-agent"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
