@@ -94,7 +94,7 @@ async def health_check() -> HealthResponse:
 
 
 @app.post("/reset", response_model=ObservationResponse)
-async def reset(request: ResetRequest = ResetRequest()) -> ObservationResponse:
+async def reset(request: Optional[ResetRequest] = None) -> ObservationResponse:
     """
     Reset the environment for a new episode.
 
@@ -106,7 +106,8 @@ async def reset(request: ResetRequest = ResetRequest()) -> ObservationResponse:
     """
     env = get_env()
     try:
-        return env.reset(request.difficulty)
+        difficulty = request.difficulty if request else DifficultyLevel.easy
+        return env.reset(difficulty)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Reset failed: {str(e)}")
 
