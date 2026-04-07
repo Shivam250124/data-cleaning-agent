@@ -30,11 +30,11 @@ from app.models import ActionType, DifficultyLevel
 REQUEST_DELAY = 1.0
 
 
-def get_client() -> OpenAI:
-    api_key = os.environ.get("OPENAI_API_KEY")
+def get_client() -> OpenAI | None:
+    api_key = os.environ.get("HF_TOKEN") or os.environ.get("API_KEY") or os.environ.get("OPENAI_API_KEY")
     if not api_key:
-        print("Error: OPENAI_API_KEY environment variable is not set.", file=sys.stderr)
-        sys.exit(1)
+        print("Warning: No API key found. Set HF_TOKEN, API_KEY, or OPENAI_API_KEY environment variable.", file=sys.stderr)
+        return None
 
     base_url = os.environ.get("OPENAI_BASE_URL", "https://api.groq.com/openai/v1")
     return OpenAI(api_key=api_key, base_url=base_url)
@@ -119,6 +119,11 @@ def main() -> None:
     print("=" * 50)
 
     client = get_client()
+    if client is None:
+        print("Skipping baseline due to missing API key.")
+        print("Set HF_TOKEN, API_KEY, or OPENAI_API_KEY to run the LLM baseline.")
+        return
+
     registry = DatasetRegistry()
     env = DataCleaningEnv(registry=registry)
 
