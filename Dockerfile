@@ -13,6 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app/ ./app/
 COPY data/ ./data/
 COPY scripts/ ./scripts/
+COPY inference.py ./inference.py
 
 # Expose port for Hugging Face Spaces
 EXPOSE 7860
