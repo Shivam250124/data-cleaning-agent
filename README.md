@@ -3,10 +3,14 @@ title: Data Cleaning Agent
 emoji: 🧹
 colorFrom: blue
 colorTo: green
-sdk: docker
+sdk: gradio
+sdk_version: 4.44.0
+app_file: app.py
 pinned: false
 tags:
   - openenv
+  - data-cleaning
+  - ai-agent
 ---
 
 # Data Cleaning Agent OpenEnv
