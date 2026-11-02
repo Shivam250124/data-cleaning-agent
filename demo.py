@@ -458,7 +458,7 @@ with gr.Blocks(css=CSS, title="🧹 Data Cleaning Agent Arena") as gradio_app:
         with gr.Column(scale=3):
             gr.Markdown("### 📡 Live Action Log")
             log_box = gr.Textbox(
-                lines=22, max_lines=22, interactive=False,
+                lines=22, interactive=False,
                 placeholder="Logs stream here as each model runs…",
             )
         with gr.Column(scale=2):
