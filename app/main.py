@@ -278,7 +278,7 @@ async def column_not_found_handler(request, exc: ColumnNotFoundError):
 try:
     import gradio as gr
     from demo import gradio_app as _gradio_blocks
-
     app = gr.mount_gradio_app(app, _gradio_blocks, path="/demo")
-except ImportError:
-    pass  # gradio not installed — API-only mode, demo skipped
+    print("✅ Gradio Arena mounted at /demo")
+except Exception as e:
+    print(f"⚠️  Gradio mount failed: {e}")
