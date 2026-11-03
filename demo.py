@@ -44,9 +44,9 @@ _SERVER_OAI_KEY = os.environ.get("OPENAI_API_KEY", "")
 # ── Model registry ────────────────────────────────────────────────────────────
 MODELS: dict[str, dict] = {
     "⚙️ Deterministic Baseline": {"type": "baseline"},
-    "🦙 LLaMA 3.1 8B  (Groq)": {
+    "🦙 LLaMA 3.3 70B  (Groq)": {
         "type": "llm",
-        "model": "llama-3.1-8b-instant",
+        "model": "llama-3.3-70b-versatile",
         "base_url": "https://api.groq.com/openai/v1",
         "server_key": _SERVER_GROQ_KEY,
     },
@@ -436,7 +436,7 @@ with gr.Blocks(css=CSS, title="🧹 Data Cleaning Agent Arena") as gradio_app:
             )
             model_checkboxes = gr.CheckboxGroup(
                 choices=list(MODELS.keys()),
-                value=list(MODELS.keys()),
+                value=["⚙️ Deterministic Baseline", "🦙 LLaMA 3.3 70B  (Groq)"],
                 label="Models to compete",
             )
             api_key_input = gr.Textbox(
