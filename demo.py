@@ -142,7 +142,8 @@ def _llm_pick_action(client, model_id: str, state: list, step: int, max_steps: i
         temperature=0,
         max_tokens=100,
     )
-    return _parse_action(resp.choices[0].message.content)
+    raw = resp.choices[0].message.content.strip()
+    return _parse_action(raw), raw
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -214,9 +215,10 @@ def _run_episode(model_name: str, model_cfg: dict, difficulty: str,
                 action_type, params = _baseline_pick_action(state, step)
                 time.sleep(0.25)                   # pacing for live feel
             else:
-                action_type, params = _llm_pick_action(
+                (action_type, params), raw_resp = _llm_pick_action(
                     client, model_cfg["model"], state, step, max_steps
                 )
+                log(f"  [raw]: {raw_resp[:100]}")
                 time.sleep(0.4)                    # rate-limit buffer
         except Exception as e:
             log(f"  Step {step:2d}: ⚠️  choice failed ({e}) — fallback drop_duplicates")
