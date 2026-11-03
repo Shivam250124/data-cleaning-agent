@@ -109,28 +109,38 @@ def _parse_action(text: str) -> tuple[str, dict]:
 
 def _llm_pick_action(client, model_id: str, state: list, step: int, max_steps: int) -> tuple[str, dict]:
     preview = state[:8]
+    # Show null counts to help model identify what to clean
+    import pandas as pd
+    df = pd.DataFrame(state)
+    null_counts = df.isnull().sum().to_dict()
+    has_nulls = {k: v for k, v in null_counts.items() if v > 0}
+
     prompt = (
-        "You are a data cleaning agent. Pick ONE action to improve this dataset.\n\n"
-        f"Data (first 8 rows): {json.dumps(preview, default=str)}\n"
+        "You are a data cleaning agent. You MUST return a cleaning action as JSON.\n\n"
+        f"Data sample (first 8 rows):\n{json.dumps(preview, default=str)}\n\n"
+        f"Columns with missing values: {json.dumps(has_nulls)}\n"
         f"Step: {step}/{max_steps}\n\n"
-        "Available actions (use EXACT parameter names):\n"
-        '- drop_duplicates: {}\n'
-        '- fill_missing:    {"column": "col_name", "strategy": "mean|median|mode|ffill|bfill"}\n'
-        '- cast_column:     {"column": "col_name", "dtype": "int|float|str|datetime"}\n'
-        '- rename_column:   {"old_name": "old", "new_name": "new"}\n'
-        '- strip_whitespace:{"column": "col_name"}\n'
-        '- drop_column:     {"column": "col_name"}\n\n'
-        "Rules:\n"
-        "- Key is always \"column\", never \"column_name\"\n"
-        "- Only use columns that exist in the data\n"
-        "- Priority: drop_duplicates → fill_missing → strip_whitespace\n\n"
-        'Respond with ONLY JSON: {"action_type": "...", "params": {...}}'
+        "RULES:\n"
+        "- You MUST always return a cleaning action. NEVER return 'done'.\n"
+        "- Pick the most impactful action based on the data issues you see.\n"
+        "- Priority: 1) drop_duplicates  2) fill_missing  3) strip_whitespace\n"
+        "- Key is always 'column', never 'column_name'\n"
+        "- Only use columns that exist in the data\n\n"
+        "Available actions:\n"
+        '  drop_duplicates   -> {"action_type": "drop_duplicates", "params": {}}\n'
+        '  fill_missing      -> {"action_type": "fill_missing", "params": {"column": "col", "strategy": "mean"}}\n'
+        '  strip_whitespace  -> {"action_type": "strip_whitespace", "params": {"column": "col"}}\n'
+        '  cast_column       -> {"action_type": "cast_column", "params": {"column": "col", "dtype": "int"}}\n'
+        '  rename_column     -> {"action_type": "rename_column", "params": {"old_name": "old", "new_name": "new"}}\n'
+        '  drop_column       -> {"action_type": "drop_column", "params": {"column": "col"}}\n\n'
+        "Respond with ONLY a single JSON object. No explanation. No markdown. Example:\n"
+        '{"action_type": "fill_missing", "params": {"column": "age", "strategy": "mean"}}'
     )
     resp = client.chat.completions.create(
         model=model_id,
         messages=[{"role": "user", "content": prompt}],
         temperature=0,
-        max_tokens=150,
+        max_tokens=100,
     )
     return _parse_action(resp.choices[0].message.content)
 
@@ -213,10 +223,9 @@ def _run_episode(model_name: str, model_cfg: dict, difficulty: str,
             action_type, params = "drop_duplicates", {}
 
         if not action_type or action_type == "done":
-            log(f"  Step {step:2d}: 🏁 Model signalled done early")
-            break
-
-        # Execute action inside env lock
+            log(f"  Step {step:2d}: ⚠️  Model returned 'done' — using drop_duplicates fallback")
+            action_type = "drop_duplicates"
+            params = {}
         with _env_lock:
             try:
                 obs = _env.step(ActionType(action_type), params)
